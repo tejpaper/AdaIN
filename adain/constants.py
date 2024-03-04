@@ -1,24 +1,22 @@
-import torch
-
-from torchvision import transforms
-
 import os
+
 from PIL import Image
 
-assert __name__ != '__main__', 'Module startup error.'
+import torch
+from torchvision import transforms
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-loader = transforms.Lambda(lambda p: Image.open(p).convert('RGB'))
+LOADER = transforms.Lambda(lambda p: Image.open(p).convert('RGB'))
 
 TRANSFORMS = transforms.Compose([
-    loader,
+    LOADER,
     transforms.RandomCrop(256),
     transforms.ToTensor()
 ])
 
 IMG2TENSOR = transforms.Compose([
-    loader,
+    LOADER,
     transforms.ToTensor(),
     transforms.Lambda(lambda t: t.unsqueeze(0).to(DEVICE))
 ])
@@ -28,13 +26,25 @@ TENSOR2IMG = transforms.Compose([
     transforms.ToPILImage()
 ])
 
-PATH2DATASET = r'D:\App\Datasets\CS-COCO'
+PATH2DATASET = '/media/data/Datasets/CS-COCO'
+""" Dataset structure is as follows:
+.
+├── content
+│   ├── 0.jpg
+│   ├── ...
+│   └── 79999.jpg
+└── style
+    ├── 0.jpg
+    ├── ...
+    └── 79999.jpg
+"""
 
 MODELS_DIR = 'models'
 CHECKPOINTS_DIR = os.path.join(MODELS_DIR, 'checkpoints')
 PATH2VGG = os.path.join(MODELS_DIR, 'vgg19-norm.pth')
 PATH2MODEL = os.path.join(MODELS_DIR, 'model.pth')
 
-LOGS_DIR = 'logs'
-CONTENT_IMG = os.path.join('extra', 'content.jpg')
-STYLE_IMG = os.path.join('extra', 'style.jpg')
+IMAGES_DIR = 'images'
+CONTENT_IMG = os.path.join(IMAGES_DIR, 'cornell university.jpg')
+STYLE_IMG = os.path.join(IMAGES_DIR, 'woman with a hat.jpg')
+LOGS_DIR = os.path.join('models', 'logs')

@@ -1,21 +1,16 @@
-from .constants import DEVICE
+from adain.constants import DEVICE
 
 import torch
 import torch.nn as nn
-
 from torch.nn.functional import mse_loss
 
-from typing import Tuple, List
 
-assert __name__ != '__main__', 'Module startup error.'
-
-
-def requires_grad(model: nn.Module, flag: bool = False):
+def requires_grad(model: nn.Module, flag: bool = False) -> None:
     for param in model.parameters():
         param.requires_grad = flag
 
 
-def calc_mean_std(x: torch.Tensor, eps: float = 1e-8) -> Tuple[torch.Tensor, torch.Tensor]:
+def calc_mean_std(x: torch.Tensor, eps: float = 1e-8) -> tuple[torch.Tensor, torch.Tensor]:
     n, c, *hw = x.size()
     x = x.view(n, c, -1)
 
@@ -61,12 +56,12 @@ def color_fixation(source: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
     return s_transfer.view(inp_size)
 
 
-def content_loss(generated_features: torch.Tensor, t_code: torch.Tensor) -> torch.Tensor:
+def calc_content_loss(generated_features: torch.Tensor, t_code: torch.Tensor) -> torch.Tensor:
     assert not t_code.requires_grad
     return mse_loss(generated_features, t_code)
 
 
-def style_loss(generated_features: List[torch.Tensor], style_features: List[torch.Tensor]) -> torch.Tensor:
+def calc_style_loss(generated_features: list[torch.Tensor], style_features: list[torch.Tensor]) -> torch.Tensor:
     assert not any([f.requires_grad for f in style_features])
     assert len(generated_features) == len(style_features)
 

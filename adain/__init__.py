@@ -1,6 +1,3 @@
-if __name__ != '__main__':
-    from .constants import DEVICE
-    from .dataset import DataSet
-    from .models import StyleTransferNetwork
-else:
-    raise ImportError('Package startup error.')
+from adain.constants import *
+from adain.models import StyleTransferNetwork
+from adain.style import Style, stylize

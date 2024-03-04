@@ -1,16 +1,14 @@
-from .constants import PATH2VGG
-from .functions import requires_grad, adaptive_instance_normalization
+from adain.constants import PATH2VGG
+from adain.functions import requires_grad, adaptive_instance_normalization
+
+import typing
 
 import torch
 import torch.nn as nn
 
-from typing import List, Tuple, Union
-
-assert __name__ != '__main__', 'Module startup error.'
-
 
 class ReflectionConv2d(nn.Module):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__()
 
         self.conv = nn.Sequential(
@@ -23,7 +21,7 @@ class ReflectionConv2d(nn.Module):
 
 
 class FeatureExtractor(nn.Module):
-    def __init__(self):
+    def __init__(self, path2vgg: str) -> None:
         super().__init__()
 
         self.add_module(
@@ -68,17 +66,17 @@ class FeatureExtractor(nn.Module):
             )
         )
 
-        self.__load_weights()
+        self.__load_weights(path2vgg)
 
-    def __load_weights(self):
-        weights = torch.load(PATH2VGG)
+    def __load_weights(self, path2vgg: str) -> None:
+        weights = torch.load(path2vgg)
 
         for new_key, key in zip([*self.state_dict()], [*weights]):
             weights[new_key] = weights.pop(key)
 
         self.load_state_dict(weights)
 
-    def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
+    def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
         features = [x]
 
         for layer in self.children():
@@ -88,10 +86,10 @@ class FeatureExtractor(nn.Module):
 
 
 class StyleTransferNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, path2vgg: str = PATH2VGG) -> None:
         super().__init__()
 
-        self.extractor = FeatureExtractor()
+        self.extractor = FeatureExtractor(path2vgg)
         self.extractor.eval()
         requires_grad(self.extractor)
 
@@ -121,7 +119,7 @@ class StyleTransferNetwork(nn.Module):
             nn.ReLU()
         )
 
-    def train(self, mode: bool = True):
+    def train(self, mode: bool = True) -> typing.Self:
         self.training = mode
 
         requires_grad(self.decoder, mode)
@@ -130,7 +128,7 @@ class StyleTransferNetwork(nn.Module):
 
         return self
 
-    def mix(self, f_c: torch.Tensor, *style_features: Tuple[torch.Tensor, Union[int, float]]):
+    def mix(self, f_c: torch.Tensor, *style_features: tuple[torch.Tensor, int | float]) -> torch.Tensor:
         assert len(style_features)
 
         style_impact = 0
@@ -146,7 +144,7 @@ class StyleTransferNetwork(nn.Module):
 
         return self.decoder(t)
 
-    def forward(self, content: torch.Tensor, style: torch.Tensor, alpha: Union[int, float] = 1) -> torch.Tensor:
+    def forward(self, content: torch.Tensor, style: torch.Tensor, alpha: int | float = 1) -> torch.Tensor:
         assert 0 <= alpha <= 1
 
         *_, f_c = self.extractor(content)
