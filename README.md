@@ -4,7 +4,7 @@
 
 Unofficial implementation of [Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization](https://arxiv.org/abs/1703.06868) written in PyTorch together with code for training the network and its simple usage.
 
-![Some qualitative examples](extra/examples.jpg "adfs")
+![Some qualitative examples](extra/examples.jpg)
 
 ## Usage
 
@@ -17,7 +17,7 @@ Adaptations of these notebooks for Google Colab are contained in the `colab` fol
 
 ## Installation
 
-You need to have Python 3.11+. And run the following commands:
+You need to have Python 3.11+ and run the following commands:
 
 ```bash
 git clone https://github.com/tejpaper/AdaIN.git
