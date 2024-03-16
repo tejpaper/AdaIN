@@ -26,43 +26,43 @@ class FeatureExtractor(nn.Module):
 
         self.add_module(
             'relu1_1', nn.Sequential(
-                nn.Conv2d(3, 3, (1, 1)),             # special conv layer
-                ReflectionConv2d(3, 64, (3, 3)),                               # conv1_1
-                nn.ReLU(),                                                           # relu1_1
+                nn.Conv2d(3, 3, (1, 1)),
+                ReflectionConv2d(3, 64, (3, 3)),
+                nn.ReLU(),
             )
         )
 
         self.add_module(
             'relu2_1', nn.Sequential(
-                ReflectionConv2d(64, 64, (3, 3)),                               # conv1_2
-                nn.ReLU(),                                                            # relu1_2
-                nn.MaxPool2d(2),                                                      # pooling
-                ReflectionConv2d(64, 128, (3, 3)),                              # conv2_1
-                nn.ReLU(),                                                            # relu2_1
+                ReflectionConv2d(64, 64, (3, 3)),
+                nn.ReLU(),
+                nn.MaxPool2d(2),
+                ReflectionConv2d(64, 128, (3, 3)),
+                nn.ReLU(),
             )
         )
 
         self.add_module(
             'relu3_1', nn.Sequential(
-                ReflectionConv2d(128, 128, (3, 3)),                              # conv2_2
-                nn.ReLU(),                                                             # relu2_2
-                nn.MaxPool2d(2),                                                       # pooling
-                ReflectionConv2d(128, 256, (3, 3)),                              # conv3_1
-                nn.ReLU(),                                                             # relu3_1
+                ReflectionConv2d(128, 128, (3, 3)),
+                nn.ReLU(),
+                nn.MaxPool2d(2),
+                ReflectionConv2d(128, 256, (3, 3)),
+                nn.ReLU(),
             )
         )
 
         self.add_module(
             'relu4_1', nn.Sequential(
-                ReflectionConv2d(256, 256, (3, 3)),                              # conv3_2
-                nn.ReLU(),                                                             # relu3_2
-                ReflectionConv2d(256, 256, (3, 3)),                              # conv3_3
-                nn.ReLU(),                                                             # relu3_3
-                ReflectionConv2d(256, 256, (3, 3)),                              # conv3_4
-                nn.ReLU(),                                                             # relu3_4
-                nn.MaxPool2d(2),                                                       # pooling
-                ReflectionConv2d(256, 512, (3, 3)),                              # conv4_1
-                nn.ReLU()                                                              # relu4_1
+                ReflectionConv2d(256, 256, (3, 3)),
+                nn.ReLU(),
+                ReflectionConv2d(256, 256, (3, 3)),
+                nn.ReLU(),
+                ReflectionConv2d(256, 256, (3, 3)),
+                nn.ReLU(),
+                nn.MaxPool2d(2),
+                ReflectionConv2d(256, 512, (3, 3)),
+                nn.ReLU(),
             )
         )
 
@@ -116,7 +116,7 @@ class StyleTransferNetwork(nn.Module):
             ReflectionConv2d(64, 64, (3, 3)),
             nn.ReLU(),
             ReflectionConv2d(64, 3, (3, 3)),
-            nn.ReLU()
+            nn.ReLU(),
         )
 
     def train(self, mode: bool = True) -> typing.Self:
